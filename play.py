@@ -27,5 +27,5 @@ class SelfPlay:
         'next_board_state': next_board_state,
         'player': player,
         'reward': reward
-      } for board_state, action, next_board_state, player, reward in zip(board_states, actions, next_board_states, [i % 2 for i in range(len(board_states))], [0] * (len(board_states) - 1) + [1])
+      } for board_state, action, next_board_state, player, reward in zip(board_states, actions, next_board_states, [i % 2 for i in range(len(board_states))], [1 if (len(board_states) % 2) ^ (x % 2) else -1 for x in range(len(board_states))])
     ]

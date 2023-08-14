@@ -24,14 +24,14 @@ class PipelineTask (InfiniteLoopTask):
         ) for c in range(2)],
         *[RegularSaveTriggerTask(
           c,
-          16384,
+          262144,
           SequentialTask([
             NoInterruptWhileSavingTask(context),
             SaveModelTask(path, c, policy_nets[c], value_nets[c], context),
             SaveTrainedNumTask(c, hdf, context),
             SaveLossTask(c, hdf, context),
             SavingOverTask(context),
-            UpdatePrevSaveTimeTask(c, 16384, context)
+            UpdatePrevSaveTimeTask(c, 262144, context)
           ], context),
           context
         ) for c in range(2)]

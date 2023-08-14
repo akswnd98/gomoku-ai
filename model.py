@@ -9,7 +9,7 @@ import numpy as np
 from safetensors.torch import load_model, save_model
 
 class PolicyNet (nn.Module):
-  def __init__ (self, hidden_layers_num=8):
+  def __init__ (self, hidden_layers_num=12):
     super(PolicyNet, self).__init__()
 
     self.input_layer = nn.Sequential(
@@ -48,7 +48,7 @@ class PolicyNet (nn.Module):
     return x;
 
 class ValueNet (nn.Module):
-  def __init__ (self, hidden_layers_num=8):
+  def __init__ (self, hidden_layers_num=12):
     super(ValueNet, self).__init__()
     self.input_layer = nn.Sequential(
       nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2, bias=False),

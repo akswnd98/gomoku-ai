@@ -23,7 +23,7 @@ class TrainTask (Task):
     self.value_nets = value_nets
     self.batch_size = batch_size
     self.gamma = gamma
-    self.optimizer = optim.Adam(list(self.policy_nets[color].parameters()) + list(self.value_nets[color].parameters()), lr=1e-3)
+    self.optimizer = optim.Adam(list(self.policy_nets[color].parameters()) + list(self.value_nets[color].parameters()), lr=1e-4)
 
   def run (self):
     dataset = self.context['datasets'][self.color]
@@ -52,7 +52,7 @@ class TrainTask (Task):
     actions = torch.from_numpy(np.array([x['action'][0] + x['action'][1] * 9 for x in dataset], dtype=np.int64)).to(self.device)
     one_hot_action = F.one_hot(actions, num_classes=81)
     action_prob = torch.sum(one_hot_action * policies)
-    policy_loss = torch.log(action_prob + 1e-5) * advantages
+    policy_loss = torch.log(action_prob + 1e-7) * advantages
     policy_loss = -torch.mean(policy_loss)
 
     loss = value_loss + 0.2 * policy_loss

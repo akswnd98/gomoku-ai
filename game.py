@@ -6,7 +6,7 @@ class Game:
   def __init__ (self):
     self.board_state = np.ones((9, 9), dtype=np.int8) * -1
     self.is_over = False;
-    self.winner = 0
+    self.winner = -1
 
   # c = color: black -> 0, white -> 1
   def step (self, x, y, c):
