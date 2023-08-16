@@ -26,10 +26,18 @@ if __name__ == '__main__':
     load_model(policy_nets[c], os.path.join(args[0], 'ckpt', 'no{}_{}_policy_net.safetensors'.format(latest_model_num[c], model_prefixes[c])))
     policy_nets[c].to(device)
 
-  datasets = SelfPlay([AiPlayer(device, policy_nets[i], 0.2) for i in range(2)], Game()).generate_dataset()
+  datasets = SelfPlay([AiPlayer(device, policy_nets[i], 0) for i in range(2)], Game()).generate_dataset()
 
   for dataset in datasets:
-    print(dataset['next_board_state'])
+    for l in dataset['next_board_state']:
+      for x in l:
+        if x == -1:
+          print('e', end=' ')
+        elif x == 0:
+          print('b', end=' ')
+        else:
+          print('w', end=' ')
+      print()
     print(dataset['player'])
     print(dataset['action'])
     print()

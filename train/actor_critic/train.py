@@ -6,7 +6,7 @@ from player import *
 from model import *
 from safetensors.torch import save_model
 from safetensors.torch import load_model
-from tasks.reinforce.pipeline_task import *
+from tasks.actor_critic.pipeline_task import *
 
 if __name__ == '__main__':
   try:
@@ -27,8 +27,9 @@ if __name__ == '__main__':
         sys.exit(-1)
       
       policy_nets = [PolicyNet() for _ in range(2)]
+      value_nets = [ValueNet() for _ in range(2)]
       device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-      for net in policy_nets:
+      for net in value_nets + policy_nets:
         net.to(device)
 
       try:
@@ -40,6 +41,7 @@ if __name__ == '__main__':
       model_prefixes = ['black', 'white']
       for c in range(2):
         save_model(policy_nets[c], os.path.join(args[0], 'ckpt', 'no0_{}_policy_net.safetensors'.format(model_prefixes[c])))
+        save_model(value_nets[c], os.path.join(args[0], 'ckpt', 'no0_{}_value_net.safetensors'.format(model_prefixes[c])))
 
       hdf = h5py.File(os.path.join(args[0], 'progress.h5'), 'w')
       hdf.create_dataset('trained_nums', dtype=np.int64, shape=(2, ))
@@ -59,8 +61,9 @@ if __name__ == '__main__':
 
     elif o == '-d':
       policy_nets = [PolicyNet() for _ in range(2)]
+      value_nets = [ValueNet() for _ in range(2)]
       device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-      for net in policy_nets:
+      for net in value_nets + policy_nets:
         net.to(device)
 
       model_prefixes = ['black', 'white']
@@ -71,6 +74,7 @@ if __name__ == '__main__':
       
       for c in range(2):
         load_model(policy_nets[c], os.path.join(args[0], 'ckpt', 'no{}_{}_policy_net.safetensors'.format(latest_model_num[c], model_prefixes[c])))
+        load_model(value_nets[c], os.path.join(args[0], 'ckpt', 'no{}_{}_value_net.safetensors'.format(latest_model_num[c], model_prefixes[c])))
 
       hdf = h5py.File(os.path.join(args[0], 'progress.h5'), 'r+')
       context = {
@@ -83,5 +87,5 @@ if __name__ == '__main__':
       }
     
     players = [AiPlayer(device, policy_net, 0.2) for policy_net in policy_nets]
-    pipeline_task = PipelineTask(args[0], device, players, 16384, policy_nets, hdf, context)
+    pipeline_task = PipelineTask(args[0], device, players, 16384, policy_nets, value_nets, hdf, context)
     pipeline_task.run()

@@ -27,7 +27,7 @@ class AiPlayer (Player):
       )
     ))
     policy_idx = reduce(lambda a, b: a if a[1] > b[1] else b, possible, (0, -1, 0))[0]
-    if np.random.choice([0, 1], 1, p=[1 - self.epsilon, self.epsilon]) == 0:
+    if np.random.choice([0, 1], 1, p=[1 - self.epsilon, self.epsilon])[0] == 0 or len(possible) <= 1:
       idx = policy_idx
     else:
       a = [z[0] for z in possible]

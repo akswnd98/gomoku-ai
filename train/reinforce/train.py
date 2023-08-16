@@ -82,6 +82,6 @@ if __name__ == '__main__':
         'datasets': [[], []]
       }
     
-    players = [AiPlayer(device, policy_net, 0.2) for policy_net in policy_nets]
+    players = [AiPlayer(device, policy_net, 0.1) for policy_net in policy_nets]
     pipeline_task = PipelineTask(args[0], device, players, 16384, policy_nets, hdf, context)
     pipeline_task.run()
